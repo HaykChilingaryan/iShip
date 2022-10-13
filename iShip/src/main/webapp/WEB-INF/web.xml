@@ -1,0 +1,7 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" 
+         version="2.5" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://JAVA.sun.com/xml/ns/javaee http://JAVA.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+  
+</web-app>

@@ -1,0 +1,33 @@
+@charset "UTF-8";
+body{
+	background-color: #ffc107;
+}
+.bg-black{
+	background-color:black;	
+}
+.bg-purple{
+	background-color: #B837D8;
+}
+.text-yellow{
+	color:#ffc107;
+}
+.text-gray{
+	color: gray;
+}
+.ahover:hover{
+	color:#ffc107 !important;
+}
+.awhover:hover{
+	color:white;
+}
+.btnhover:hover{
+	background-color: #564093;	
+}
+.btnhovergreen:hover{
+		background-color: #14F32A;	
+	
+}
+.borderRadius10{
+	border-radius:10px;
+	
+}

@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+.text-yellow{
+	color: #ffc107;
+}
+.text-yelloww{
+	color: #ffc107;
+}
+.text-yellow:hover{
+	color: white;
+}
+.sizedown{
+	width:370px;
+	height:300px;
+}
+.btnmarginleft{
+	margin-left:10px !important;
+}
+
+@media (max-width: 600px) {
+    .main {
+        border-radius: 0px;
+    }
+}
+.btnhover:hover{
+	background-color: green !important;
+	
+}
+
+.bg-black{
+	background-color:black !important;
+}
+
+.lihover{
+	border: 0.2px solid;
+	border-color:white;
+}
+.floatleft{
+	float:left;
+}
