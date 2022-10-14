@@ -14,7 +14,6 @@ import Model.Order;
 public class OrdersDAO {
 
 	public int createOrder(Order order) {
-		System.out.println("In CreateOrderMethod");
 		int rowsAffected = 0;
 
 		try {

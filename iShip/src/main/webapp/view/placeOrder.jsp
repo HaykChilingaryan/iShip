@@ -83,7 +83,7 @@
 
 
             <div class="center padding-top100 height200px">
-                <h1>Available Options</h1>
+                <h1>${message }</h1>
 
             </div>
             <div class="height20px"></div>

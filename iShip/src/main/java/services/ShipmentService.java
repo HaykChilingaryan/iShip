@@ -119,44 +119,46 @@ public class ShipmentService {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		ShipmentsDAO shipmentsDAO = new ShipmentsDAO();
-		Shipment shipment = new Shipment(user.getId(), depLoc, depDate, arrLoc, arrDate, maxWeight, pricePerKg,0);
-		shipmentsDAO.createShipment(shipment);
-		String email = user.getEmail();
-		if(email != null && !email.equals("")) {
-			String to = email;
-			Properties props = new Properties();
-			props.put("mail.smtp.host", "smtp.gmail.com");
-			props.put("mail.smtp.socketFactory.port", "465");
-			props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-			props.put("mail.smtp.auth", "true");
-			props.put("mail.smtp.port", "465");
-			props.put("mail.smtp.ssl.trust", "*");
-			Session mailSession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication("infoishipment@gmail.com", "pwizqylhlnpyhcrb");
+		if(depDate.compareTo(arrDate) < 0) {
+			Shipment shipment = new Shipment(user.getId(), depLoc, depDate, arrLoc, arrDate, maxWeight, pricePerKg,0);
+			shipmentsDAO.createShipment(shipment);
+			String email = user.getEmail();
+			if(email != null && !email.equals("")) {
+				String to = email;
+				Properties props = new Properties();
+				props.put("mail.smtp.host", "smtp.gmail.com");
+				props.put("mail.smtp.socketFactory.port", "465");
+				props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+				props.put("mail.smtp.auth", "true");
+				props.put("mail.smtp.port", "465");
+				props.put("mail.smtp.ssl.trust", "*");
+				Session mailSession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication("infoishipment@gmail.com", "pwizqylhlnpyhcrb");
+					}
+				});
+				try {
+					MimeMessage message = new MimeMessage(mailSession);
+					message.setFrom(new InternetAddress(email));
+					message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+					message.setSubject("Shipment Creation Confirmation");
+					String textString = "Your Shipment Option has been successfully created\n\n"
+							+ "\n\nShipment Information" 
+							+ "\nDeparting From: " + shipment.getDepartureLocation() + " on " + shipment.getDepartureDate()
+							+ "\nArriving In: " + shipment.getArrivalLocation() + " on " + shipment.getDepartureDate()
+							+ "\nAvailable space: " + shipment.getMaxWeight()+"kg"
+							+ "\nPrice Per Kilogram: $"+ shipment.getPricePerKg()
+							+ "\nShipment created on: " + shipment.getShipmentRegistrationDate()
+							+ "\n\n\nThank you for your continous trust."
+							+ "\nWe will let you know once your shipment is booked.";
+					message.setText(textString);
+					Transport.send(message);
 				}
-			});
-			try {
-				MimeMessage message = new MimeMessage(mailSession);
-				message.setFrom(new InternetAddress(email));
-				message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-				message.setSubject("Shipment Creation Confirmation");
-				String textString = "Your Shipment Option has been successfully created\n\n"
-						+ "\n\nShipment Information" 
-						+ "\nDeparting From: " + shipment.getDepartureLocation() + " on " + shipment.getDepartureDate()
-						+ "\nArriving In: " + shipment.getArrivalLocation() + " on " + shipment.getDepartureDate()
-						+ "\nAvailable space: " + shipment.getMaxWeight()+"kg"
-						+ "\nPrice Per Kilogram: $"+ shipment.getPricePerKg()
-						+ "\nShipment created on: " + shipment.getShipmentRegistrationDate()
-						+ "\n\n\nThank you for your continous trust."
-						+ "\nWe will let you know once your shipment is booked.";
-				message.setText(textString);
-				Transport.send(message);
-			}
 
-			catch (MessagingException e) {
-				throw new RuntimeException(e);
-			}	
+				catch (MessagingException e) {
+					throw new RuntimeException(e);
+				}	
+			}
 		}
 		List<Shipment> currentUserShipments = shipmentsDAO.getAllShipmentsForUser(user.getId());
 		request.setAttribute("currentUserShipments", currentUserShipments);

@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import Model.Order;
 import Model.Shipment;
 public class ShipmentsDAO {
@@ -83,8 +84,9 @@ public class ShipmentsDAO {
 				shipments.add(shipment);
 			}
 		}catch (SQLException e) {
-			e.printStackTrace();
+			e.printStackTrace();;
 		}
+				
 		return shipments;
 		
 	}

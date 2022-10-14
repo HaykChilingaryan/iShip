@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+
 import Model.Order;
 import Model.Shipment;
 import Model.User;
@@ -52,34 +53,53 @@ public class OrderService {
 		return mView;
 		
 	}
-	
+	public static boolean checkIfValidDate( String date) {
+		String[] dateStrings = date.split("-");
+		if(dateStrings.length == 3) {
+			if(Integer.parseInt(dateStrings[1]) > 0 && Integer.parseInt(dateStrings[1]) <= 12) {
+				if(Integer.parseInt(dateStrings[2])> 0 && Integer.parseInt(dateStrings[1])<31) {
+					return true;
+				}
+			}
+		}
+		return false;
+		
+	}
 	public ModelAndView createOrder(HttpServletRequest request, @RequestParam("departureDate") java.sql.Date depDate,
 			@RequestParam("arrivalDate") java.sql.Date arrDate,
 			@RequestParam("departureLocation") String depLoc,
 			@RequestParam("arrivalLocation") String arrLoc){
 		ModelAndView mView = new ModelAndView();
-
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		ShipmentsDAO shipmentsDAO = new ShipmentsDAO();
 		List<Shipment> availableShipments = new ArrayList<Shipment>();
+		System.out.println(checkIfValidDate("2022-35-10"));
+		System.out.println(checkIfValidDate(arrDate.toString()));
 		int weight = 0;
-		if(!request.getParameter("weight").equals("")){
-			weight = Integer.parseInt(request.getParameter("weight"));
-		}
-		System.out.println(weight);
-		if(weight == 0) {
-			 availableShipments =  shipmentsDAO.findShipmentsForOrdersWithoutWeight(depLoc, arrLoc, depDate, arrDate, user.getId());
-		}else {
+		if(depDate.compareTo(arrDate) < 0) {	
+				mView.addObject("message","Available Options");
+				if(!request.getParameter("weight").equals("")){
+					weight = Integer.parseInt(request.getParameter("weight"));
+				}
+				if(weight == 0) {
+					 availableShipments =  shipmentsDAO.findShipmentsForOrdersWithoutWeight(depLoc, arrLoc, depDate, arrDate, user.getId());
+				}else {
+					
+					availableShipments =  shipmentsDAO.findShipmentsForOrders(depLoc, arrLoc, depDate, arrDate, weight,user.getId());
+				}
+				List<Shipment> currentUserShipments = shipmentsDAO.getAllShipmentsForUser(user.getId());
+				request.setAttribute("currentUserShipments", currentUserShipments);
+				request.setAttribute("availableShipments", availableShipments);
+				session.setAttribute("weight",weight);
+				mView.setViewName("placeOrder");
+				return mView;
 			
-			availableShipments =  shipmentsDAO.findShipmentsForOrders(depLoc, arrLoc, depDate, arrDate, weight,user.getId());
 		}
-		List<Shipment> currentUserShipments = shipmentsDAO.getAllShipmentsForUser(user.getId());
-		request.setAttribute("currentUserShipments", currentUserShipments);
-		request.setAttribute("availableShipments", availableShipments);
-		session.setAttribute("weight",weight);
+		mView.addObject("message","No Options, Wrong Dates");
 		mView.setViewName("placeOrder");
 		return mView;
+		
 	}
 	
 	public ModelAndView openPlaceOrderPage(HttpServletRequest request) {

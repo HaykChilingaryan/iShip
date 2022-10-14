@@ -3,12 +3,11 @@
 .text-yellow{
 	color: #ffc107;
 }
-.text-yelloww{
-	color: #ffc107;
+a:hover{
+		color: #ffc107;
+	
 }
-.text-yellow:hover{
-	color: white;
-}
+
 .sizedown{
 	width:370px;
 	height:300px;
@@ -22,6 +21,9 @@
         border-radius: 0px;
     }
 }
+.center{
+	margin: auto;
+}
 .btnhover:hover{
 	background-color: green !important;
 	
@@ -31,10 +33,7 @@
 	background-color:black !important;
 }
 
-.lihover{
-	border: 0.2px solid;
-	border-color:white;
-}
+
 .floatleft{
 	float:left;
 }
