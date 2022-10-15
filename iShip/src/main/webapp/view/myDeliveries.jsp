@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ page import="Model.User"%>
+    <%@ page import="Model.City"%>
     <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
@@ -112,11 +113,27 @@
                             </div>
                             <div class="modal-body">
                                 <label class="form-label">From*</label>
-                                <input class="form-control  " type="text" name="departureLocation" required>
+                                <select class="form-control" type="text" name="departureLocation" placeholder = "Select a City" id="depLocs">
+                   				  <option  disabled selected hidden>Choose City</option>
+                                
+								  <c:forEach items = "${allCities }" var = "city">
+								  		<option value="${city.toString() }">${city.toString() }</option>
+								  </c:forEach>
+								</select>
+								
+								
+                                <!--<input class="form-control  " type="text" name="departureLocation" required>  -->
                                 <div class="height10px"></div>
 
                                 <label class="form-label">To*</label>
-                                <input class="form-control  " type="text" name="arrivalLocation" required>
+                                <select class="form-control" type="text" name="arrivalLocation" id="depLocs">
+                                  <option  disabled selected hidden>Choose City</option>
+                                
+								  <c:forEach items = "${allCities }" var = "city">
+								  		<option value="${city.toString() }">${city.toString() }</option>
+								  </c:forEach>
+								</select>
+                                <!--  <input class="form-control  "  name="arrivalLocation" required>-->
                                 <div class="height10px"></div>
 
                                 <label class="form-label">Departure Date*</label>
@@ -218,30 +235,27 @@
                             </c:choose>
 
 
-
-
-                            <!-- Modal -->
-                            <div class="modal fade" id="Sender${shipment.getSenderId() }" tabindex="-1" role="dialog"
-                                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal fade" id="Sender${shipment.getSenderId() }" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLongTitle">Sender
-                                                #${shipment.getSenderId()} </h5>
+                                            <h5 class="modal-title" id="exampleModalLongTitle">${shipment.getSenderName() }</h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <input class="form-control  " type="text"
-                                                placeholder="${shipment.getSenderName() }" disabled>
+                                            
                                             <div class="height20px"></div>
+                                            <label class = "form-label">Phone Number</label>
                                             <input class="form-control  " type="text"
-                                                placeholder="${shipment.getSenderPhoneNumber() }" disabled>
+                                         placeholder="${shipment.getSenderPhoneNumber() }" disabled>
                                             <div class="height20px"></div>
+                                            <label class = "form-label">Email</label>
                                             <input class="form-control" type="number"
                                                 placeholder="${shipment.getSenderEmail() }" disabled>
                                             <div class="height20px"></div>
+                                            <label class = "form-label">Age</label>
                                             <input class="form-control" type="number"
                                                 placeholder="${shipment.getSenderAge() }" disabled>
 

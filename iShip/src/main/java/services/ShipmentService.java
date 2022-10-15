@@ -16,10 +16,12 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import Model.City;
 import Model.Order;
 import Model.Shipment;
 import Model.User;
 import databaseManagement.ApplicationDAO;
+import databaseManagement.CitiesDAO;
 import databaseManagement.OrdersDAO;
 import databaseManagement.ShipmentsDAO;
 
@@ -102,9 +104,12 @@ public class ShipmentService {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		ShipmentsDAO shipmentsDAO = new ShipmentsDAO();
+		CitiesDAO citiesDAO = new CitiesDAO();
 		List<Shipment> currentUserShipments = shipmentsDAO.getAllShipmentsForUser(user.getId());
 		request.setAttribute("shipments", currentUserShipments);
 		mView.setViewName("myDeliveries");
+		List<City> allCities = citiesDAO.getAllCities();
+		mView.addObject("allCities", allCities);
 		mView.addObject("currentUserShipments", currentUserShipments);
 		return mView;
 	}
@@ -161,7 +166,9 @@ public class ShipmentService {
 			}
 		}
 		List<Shipment> currentUserShipments = shipmentsDAO.getAllShipmentsForUser(user.getId());
+		
 		request.setAttribute("currentUserShipments", currentUserShipments);
+		
 		mView.setViewName("redirect:/myDeliveries");
 		return mView;
 	}

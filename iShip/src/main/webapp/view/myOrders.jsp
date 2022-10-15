@@ -246,11 +246,26 @@
                             </div>
                             <div class="modal-body">
                                 <label class="form-label">From*</label>
-                                <input class="form-control  " type="text" name="departureLocation" required>
-                                <div class="height20px"></div>
+                                <select class="form-control" type="text" name="departureLocation" placeholder = "Select a City" id="depLocs" required>
+                   				  <option  disabled selected hidden>Choose City</option>
+                                
+								  <c:forEach items = "${allCities }" var = "city">
+								  		<option value="${city.toString() }">${city.toString() }</option>
+								  </c:forEach>
+								</select>
+								
+								
+                                <!--<input class="form-control  " type="text" name="departureLocation" required>  -->
+                                <div class="height10px"></div>
 
                                 <label class="form-label">To*</label>
-                                <input class="form-control" type="text" name="arrivalLocation" required>
+                                <select class="form-control" type="text" name="arrivalLocation" id="arrLocs" required>
+                                 <option  disabled selected hidden>Choose City</option>
+                                
+								  <c:forEach items = "${allCities }" var = "city">
+								  		<option value="${city.toString() }">${city.toString() }</option>
+								  </c:forEach>
+								</select>
                                 <div class="height20px"></div>
 
                                 <label class="form-label  ">Between Dates*</label>

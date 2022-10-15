@@ -17,11 +17,12 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-
+import Model.City;
 import Model.Order;
 import Model.Shipment;
 import Model.User;
 import databaseManagement.ApplicationDAO;
+import databaseManagement.CitiesDAO;
 import databaseManagement.OrdersDAO;
 import databaseManagement.ShipmentsDAO;
 
@@ -31,11 +32,14 @@ public class OrderService {
 		OrdersDAO ordersDAO = new OrdersDAO();
 		ModelAndView mView = new ModelAndView();
 		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute("user");	
+		User user = (User) session.getAttribute("user");
+		CitiesDAO citiesDAO = new CitiesDAO();
 		List<Order> currentUserOrders = ordersDAO.getOrdersForUser(user.getId());
 		session.setAttribute("user", user);
 		request.setAttribute("orders", currentUserOrders);
 		mView.setViewName("myOrders");
+		List<City> allCities = citiesDAO.getAllCities();
+		mView.addObject("allCities", allCities);
 		mView.addObject("currentUserOrders", currentUserOrders);
 		return mView;
 	}
@@ -167,7 +171,7 @@ public class OrderService {
 				message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
 				message.setSubject("Shipment Booking Confirmation");
 				String textStringBooking = "Your Shipment has been successfully Booked\n\n"
-						+ "\nShipment Uniwue Number: " + shipmentId
+						+ "\nShipment Unique Number: " + shipmentId
 						+ "\nDeparting From: " + shipment.getDepartureLocation() + " on " + shipment.getDepartureDate()
 						+ "\nArriving In: " + shipment.getArrivalLocation() + " on " + shipment.getDepartureDate()
 						+ "\nWeight " + order.getOrderWeight() + "kg"

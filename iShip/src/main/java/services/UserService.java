@@ -155,7 +155,6 @@ public class UserService {
 			applicationDAO.setTemporaryPassword( user.getId(),String.valueOf(temporaryPassword));
 			request.setAttribute("message", "Login with Temporary Password");
 		}
-		System.out.println("Email with instructions sent to '" + email+"' email address");
 		return "login";
 	}
 	
@@ -166,15 +165,45 @@ public class UserService {
 		User user = (User)session.getAttribute("user");
 		String newPass = request.getParameter("newPassword");
 		String confirmNewPass  = request.getParameter("confirmNewPassword");
+		String email = user.getEmail();
 		Long phoneNumber = Long.parseLong(request.getParameter("newPhoneNumber"));
 		if(newPass.equals(confirmNewPass) && !newPass.equals("")) {
 			applicationDAO.updateUserProfileInfoById(user.getId(), newPass, phoneNumber);
-			request.setAttribute("message", "Login to see changes");
+			request.setAttribute("message", "Login again");
+			if(email != null && !email.equals("")) {
+				String to = email;
+				Properties props = new Properties();
+				props.put("mail.smtp.host", "smtp.gmail.com");
+				props.put("mail.smtp.socketFactory.port", "465");
+				props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+				props.put("mail.smtp.auth", "true");
+				props.put("mail.smtp.port", "465");
+				props.put("mail.smtp.ssl.trust", "*");
+				Session mailSession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication("infoishipment@gmail.com", "pwizqylhlnpyhcrb");
+					}
+				});
+				try {
+					MimeMessage message = new MimeMessage(mailSession);
+					message.setFrom(new InternetAddress(email));// change accordingly
+					message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+					message.setSubject("iShip Reset Password");
+					String textString = "Your password has been changed successfully.\n"
+							+"Use your new password to login to your account.\n";
+					message.setText(textString);
+					Transport.send(message);
+				}
+				catch (MessagingException e) {
+					throw new RuntimeException(e);
+				}
+			}
 			return "login";
+			
 		}
 		else if((newPass.equals("") && confirmNewPass.equals("")) && phoneNumber != user.getPhoneNumber()) {
 			applicationDAO.updateUserProfileInfoById(user.getId(), user.getPassword(), phoneNumber);
-			request.setAttribute("message", "Login to see changes");
+			request.setAttribute("message", "Login again");
 			return "login";
 		}
 		else {
