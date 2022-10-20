@@ -103,7 +103,8 @@
 	    <%} %>
 	    name = "email" required>
 	    
-	    <label for="exampleInputPassword1" class="form-label">Password</label>
+	    <label for="exampleInputPassword1" class="form-label">Password<small id="emailHelp" class="form-text text-white">At least 8 characters</small></label>
+	    
 	    <input type="password" class="pass" id="exampleInputPassword1" name = "password" required>
 	    
 	     <label for="exampleInputPassword1" class="form-label">Repeat Password</label>

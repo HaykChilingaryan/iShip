@@ -75,5 +75,24 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	public boolean checkIfValidPass() {
+		int countUpperCase = 0;
+		int countNumber = 0;
+		char[] passwordArray = this.password.toCharArray();
+		if(passwordArray.length >= 8) {
+			for(int i = 0; i < passwordArray.length;i++) {
+				if(Character.isUpperCase(passwordArray[i])) 
+					countUpperCase++;
+				if(Character.isDigit(passwordArray[i]))
+					countNumber++;
+			}
+			if(countNumber > 0 && countUpperCase >0) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }
 

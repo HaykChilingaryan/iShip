@@ -61,6 +61,7 @@
 	                    <button class="btn btn-warning btn-lg btnhover" type="submit">Get Started</button>
 	                </div>
 	            </div>
+	           
 	    </form>
 	
 	    <form action="login" method="get">

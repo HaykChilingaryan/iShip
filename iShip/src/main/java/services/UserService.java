@@ -77,7 +77,18 @@ public class UserService {
 		ApplicationDAO dao = new ApplicationDAO();
 		int rows = 0;
 		if(password.equals(repeatPassword)) {
-			rows = dao.registerUser(user);
+			if(user.checkIfValidPass())
+				rows = dao.registerUser(user);
+			else {
+				infoMessage = "Passwords requirements not met ";
+				request.setAttribute("message", infoMessage);
+				request.setAttribute("email", email);
+				request.setAttribute("phoneNumber", phoneNumber);
+				request.setAttribute("age", age);
+				request.setAttribute("firstName", firstName);
+				request.setAttribute("lastName", lastName);
+				return openRegistrationPage();
+			}
 		}
 		else {
 			infoMessage = "Passwords didn't match ";
@@ -90,9 +101,8 @@ public class UserService {
 			return openRegistrationPage();
 		}
 		if(rows==0){
-			infoMessage="Error: Try Again";
+			infoMessage="Account with this email exists";
 			request.setAttribute("message", infoMessage);
-			request.setAttribute("email", email);
 			request.setAttribute("phoneNumber", phoneNumber);
 			request.setAttribute("age", age);
 			request.setAttribute("firstName", firstName);

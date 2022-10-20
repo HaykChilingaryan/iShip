@@ -3,11 +3,14 @@
 .text-yellow{
 	color: #ffc107;
 }
+
 a:hover{
 		color: #ffc107;
 	
 }
-
+.text-yellow:hover{
+	color:white !important;
+}
 .sizedown{
 	width:370px;
 	height:300px;
