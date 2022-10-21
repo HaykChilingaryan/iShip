@@ -40,10 +40,12 @@ public class OrdersDAO {
 	}
 	
 	public int deleteOrder(int orderId) {
+		System.out.println("In Delete Order");
 		int rowsAffected =0;
 		try {
 			Connection connection = DBConnection.getConnectionToDatabase();
 			String deleteQueryString = "DELETE FROM orders WHERE order_id = " + orderId;
+			System.out.println(deleteQueryString);
 			PreparedStatement statement = connection.prepareStatement(deleteQueryString);
 			rowsAffected = statement.executeUpdate();
 		}
@@ -55,6 +57,7 @@ public class OrdersDAO {
 	
 	public int cancelOrder(int orderId) {
 		int rowsAffected =0;
+		System.out.println("In cancel order");
 		try {
 			Connection connection = DBConnection.getConnectionToDatabase();
 			String deleteQueryString = "UPDATE orders SET order_status = 'Cancelled' WHERE order_id = " + orderId;						

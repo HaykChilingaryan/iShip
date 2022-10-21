@@ -22,8 +22,11 @@
 
     <body class="bg-warning">
         <!--Naviggation Bar -->
-        <% User user=(User)session.getAttribute("user"); String user_firstName=user.getFirstName(); int
-            inProgressOrders=(Integer)session.getAttribute("inProgressOrders"); %>
+        <% 
+        	User user=(User)session.getAttribute("user"); String user_firstName=user.getFirstName();
+        	int inProgressOrders=(Integer)session.getAttribute("inProgressOrders");
+        	String userType = user.getType();
+       	%>
             <nav class="navbar navbar-expand-lg bg-black">
                 <div class="container-fluid">
                     <a class="navbar-brand text-yellow ahover" href="myProfile">
@@ -35,6 +38,24 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="nav nav-tabs">
+                        <%
+                        	if(userType.equals("Admin")){
+                        %>
+                        	<li class="nav-item ">
+                                <a class="nav-link text-yellow ahover" href="allOrders">All Orders</a>
+                            </li>
+                            
+                            <li class="nav-item ">
+                                <a class="nav-link text-yellow ahover" href="allShipments">All Shipments</a>
+                            </li>
+                            
+                            <li class="nav-item ">
+                                <a class="nav-link text-yellow ahover" href="allUsers">All Users</a>
+                            </li>
+                        		
+                        <%
+                        	}else{
+                        %>
                             <li class="nav-item ">
                                 <a class="text-yellow ahover nav-link dropdown-toggle" href="#" id="navbarDropdown1"
                                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -54,7 +75,11 @@
                                 <a class="nav-link text-yellow ahover" href="myDeliveries">My Deliveries</a>
                             </li>
 
-                            <li class=" nav-item dropdown floatright">
+                            
+                            <%
+                        		}
+                        	%>
+							<li class=" nav-item dropdown floatright">
                                 <a class="text-yellow ahover nav-link dropdown-toggle" href="#" id="navbarDropdown"
                                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Settings
@@ -66,7 +91,6 @@
                                     <a class="dropdown-item" href="logout">Log Out</a>
                                 </div>
                             </li>
-
                         </ul>
                     </div>
                 </div>

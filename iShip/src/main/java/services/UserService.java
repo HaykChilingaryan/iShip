@@ -13,11 +13,13 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import Model.User;
+import databaseManagement.AdminsDAO;
 import databaseManagement.ApplicationDAO;
 import databaseManagement.OrdersDAO;
 
@@ -32,8 +34,16 @@ public class UserService {
 		if(isValidUser) {
 			User currentUser = dao.getProfileDetails(email);
 			session.setAttribute("user", currentUser);
+			if(currentUser.getType() == "Admin") {
+				mView.setViewName("redirect:/myProfile");
+				AdminsDAO adminsDAO = new AdminsDAO();
+				mView.addObject("allUsers", adminsDAO.getAllUsers());
+				mView.addObject("allOrders", adminsDAO.getAllOrders());
+				mView.addObject("allShipments",adminsDAO.getAllShipments());
+				return mView;
+			}
 			OrdersDAO ordersDAO = new OrdersDAO();
-			int inProgressOrders = ordersDAO.getInProgressOrderCountByUserId(currentUser.getId());
+			int inProgressOrders = ordersDAO.getInProgressOrderCountByUserId(currentUser.getUserId());
 			session.setAttribute("inProgressOrders", inProgressOrders);
 			mView.setViewName("redirect:/myProfile");
 			return mView;
@@ -162,7 +172,7 @@ public class UserService {
 			}
 			ApplicationDAO applicationDAO = new ApplicationDAO();
 			User user = applicationDAO.getProfileDetails(email);
-			applicationDAO.setTemporaryPassword( user.getId(),String.valueOf(temporaryPassword));
+			applicationDAO.setTemporaryPassword( user.getUserId(),String.valueOf(temporaryPassword));
 			request.setAttribute("message", "Login with Temporary Password");
 		}
 		return "login";
@@ -178,7 +188,7 @@ public class UserService {
 		String email = user.getEmail();
 		Long phoneNumber = Long.parseLong(request.getParameter("newPhoneNumber"));
 		if(newPass.equals(confirmNewPass) && !newPass.equals("")) {
-			applicationDAO.updateUserProfileInfoById(user.getId(), newPass, phoneNumber);
+			applicationDAO.updateUserProfileInfoById(user.getUserId(), newPass, phoneNumber);
 			request.setAttribute("message", "Login again");
 			if(email != null && !email.equals("")) {
 				String to = email;
@@ -212,7 +222,7 @@ public class UserService {
 			
 		}
 		else if((newPass.equals("") && confirmNewPass.equals("")) && phoneNumber != user.getPhoneNumber()) {
-			applicationDAO.updateUserProfileInfoById(user.getId(), user.getPassword(), phoneNumber);
+			applicationDAO.updateUserProfileInfoById(user.getUserId(), user.getPassword(), phoneNumber);
 			request.setAttribute("message", "Login again");
 			return "login";
 		}
@@ -231,4 +241,15 @@ public class UserService {
 		session.setAttribute("user", user);
 		return "accountInfo";
 	}
+	
+	public ModelAndView openAllUsersPage(HttpServletRequest request) {
+		AdminsDAO adminsDAO = new AdminsDAO();
+		ModelAndView mView = new ModelAndView();
+		mView.setViewName("allUsers");
+		mView.addObject("allUsers", adminsDAO.getAllUsers());
+		return mView;
+		
+	}
+	
+	 
 }

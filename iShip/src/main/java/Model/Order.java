@@ -5,7 +5,11 @@ import java.util.Date;
 
 import databaseManagement.ApplicationDAO;
 import databaseManagement.ShipmentsDAO;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class Order {
 
 	private int orderId;
@@ -37,48 +41,7 @@ public class Order {
 		this.orderPrice = orderPrice;
 	}
 	
-	public int getOrderId() {
-		return orderId;
-	}
-	public void setOrderId(int orderId) {
-		this.orderId = orderId;
-	}
-	public int getSenderId() {
-		return senderId;
-	}
-	public void setSenderId(int senderId) {
-		this.senderId = senderId;
-	}
-	public int getShipmentId() {
-		return shipmentId;
-	}
-	public void setShipmentId(int shipmentId) {
-		this.shipmentId = shipmentId;
-	}
-	public double getOrderWeight() {
-		return orderWeight;
-	}
-	public void setOrderWeight(double d) {
-		this.orderWeight = d;
-	}
-	public String getOrderStatus() {
-		return orderStatus;
-	}
-	public void setOrderStatus(String orderStatus) {
-		this.orderStatus = orderStatus;
-	}
-	public Date getOrderDate() {
-		return orderDate;
-	}
-	public void setOrderDate(Date orderDate) {
-		this.orderDate = orderDate;
-	}
-	public double getOrderPrice() {
-		return orderPrice;
-	}
-	public void setOrderPrice(double orderPrice) {
-		this.orderPrice = orderPrice;
-	}
+	
 		
 	public Shipment getShipmentById() {
 		ShipmentsDAO shipmentsDAO = new ShipmentsDAO();
@@ -103,7 +66,6 @@ public class Order {
 		ApplicationDAO dao = new ApplicationDAO();
 		return dao.getUserById(senderId);
 	}
-	
 	public User getShipperById() {
 		ApplicationDAO dao = new ApplicationDAO();
 		Shipment shipment = getShipmentById();
@@ -113,20 +75,37 @@ public class Order {
 		User shipper = getShipperById();
 		return shipper.getFirstName()+" " +shipper.getLastName();
 	}
+	
+	public String getSenderName() {
+		User sender = getSenderById(this.getSenderId());
+		return sender.getFirstName()+" " +sender.getLastName();
+	}
 	public long getShipperPhoneNumber() {
 		User shipper = getShipperById();
 		return shipper.getPhoneNumber();
+	}
+	public long getSenderPhoneNumber() {
+		User sender = getSenderById(this.getSenderId());
+		return sender.getPhoneNumber();
 	}
 	public String getShipperEmail() {
 		User shipper = getShipperById();
 		return shipper.getEmail();
 	}
+	public String getSenderEmail() {
+		User sender = getSenderById(this.getSenderId());
+		return sender.getEmail();
+	}
 	public int getShipperAge() {
 		User shipper = getShipperById();
 		return shipper.getAge();
 	}
+	public int getSenderAge() {
+		User sender = getSenderById(this.getSenderId());
+		return sender.getAge();
+	}
 	public int getShipperId() {
 		User shipper = getShipperById();
-		return shipper.getId();
+		return shipper.getUserId();
 	}
 }

@@ -3,6 +3,11 @@ package Model;
 import java.sql.Date;
 import java.time.LocalDate;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class User {
 	
 	private int userId;
@@ -13,6 +18,8 @@ public class User {
 	private long phoneNumber;
 	private String email;
 	private Date registrationDate;
+	private String type;
+	
 	
 	
 	public User(String firstName, String lastName, int age,long phoneNumber, String email, String password) {
@@ -23,58 +30,15 @@ public class User {
 		this.phoneNumber = phoneNumber;
 		this.email=email;
 		this.registrationDate = Date.valueOf(LocalDate.now());
-	}
-	public Date getRegistrationDate() {
-		return registrationDate;
-	}
-	public void setRegistrationDate(Date registrationDate) {
-		this.registrationDate = registrationDate;
+		this.type = "User";
 	}
 	public User() {
 		// TODO Auto-generated constructor stub
 	}
-	public String getPassword() {
-		return password;
+	public String getName() {
+		return this.firstName+" "+this.lastName;
 	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	public long getPhoneNumber() {
-		return phoneNumber;
-	}
-	public void setPhoneNumber(long phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-	public String getFirstName() {
-		return firstName;
-	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	public String getLastName() {
-		return lastName;
-	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	public int getId() {
-		return userId;
-	}
-	public void setId(int id) {
-		this.userId = id;
-	}
-	public int getAge() {
-		return age;
-	}
-	public void setAge(int age) {
-		this.age = age;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
+	
 	
 	public boolean checkIfValidPass() {
 		int countUpperCase = 0;

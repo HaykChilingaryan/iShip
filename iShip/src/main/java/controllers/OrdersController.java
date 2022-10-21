@@ -8,12 +8,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import services.AdminService;
 import services.OrderService;
 
 @Controller
 public class OrdersController {
 	
 	public static final OrderService ORDER_SERVICE = new OrderService();
+	public static final AdminService ADMIN_SERVICE = new AdminService();
+
 	
 	
 	@RequestMapping(value  = {"/myOrders"}, method = RequestMethod.GET)
@@ -49,5 +52,10 @@ public class OrdersController {
 	@RequestMapping(value  = {"/cancelOrder"}, method = RequestMethod.POST)	
 	public ModelAndView cancelOrder(HttpServletRequest request)throws Exception{
 		return ORDER_SERVICE.cancelOrder(request);
+	}
+	
+	@RequestMapping(value  = {"/allOrders"}, method = RequestMethod.GET)	
+	public ModelAndView allOrder(HttpServletRequest request)throws Exception{
+		return ORDER_SERVICE.openUserOrderPage(request);
 	}
 }

@@ -25,13 +25,10 @@
     <body>
         <!--Naviggation Bar -->
         <% 
-        	User user=(User)session.getAttribute("user"); String user_email=user.getEmail(); String
-            user_firstName=user.getFirstName(); String user_lastName=user.getLastName(); String user_fullName=user_firstName
-            +" " + user_lastName;
-            long user_phoneNumber = user.getPhoneNumber();
-            int inProgressOrders = (Integer)session.getAttribute("inProgressOrders");
-        %>
-
+        	User user=(User)session.getAttribute("user"); String user_firstName=user.getFirstName();
+        	int inProgressOrders=(Integer)session.getAttribute("inProgressOrders");
+        	String userType = user.getType();
+       	%>
             <nav class="navbar navbar-expand-lg bg-black">
                 <div class="container-fluid">
                     <a class="navbar-brand text-yellow ahover" href="myProfile">
@@ -43,9 +40,24 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="nav nav-tabs">
-
-
-
+                        <%
+                        	if(userType.equals("Admin")){
+                        %>
+                        	<li class="nav-item ">
+                                <a class="nav-link text-yellow ahover" href="allOrders">All Orders</a>
+                            </li>
+                            
+                            <li class="nav-item ">
+                                <a class="nav-link text-yellow ahover" href="allShipments">All Shipments</a>
+                            </li>
+                            
+                            <li class="nav-item ">
+                                <a class="nav-link text-yellow ahover" href="allUsers">All Users</a>
+                            </li>
+                        		
+                        <%
+                        	}else{
+                        %>
                             <li class="nav-item ">
                                 <a class="text-yellow ahover nav-link dropdown-toggle" href="#" id="navbarDropdown1"
                                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -65,7 +77,11 @@
                                 <a class="nav-link text-yellow ahover" href="myDeliveries">My Deliveries</a>
                             </li>
 
-                            <li class=" nav-item dropdown floatright">
+                            
+                            <%
+                        		}
+                        	%>
+							<li class=" nav-item dropdown floatright">
                                 <a class="text-yellow ahover nav-link dropdown-toggle" href="#" id="navbarDropdown"
                                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Settings
@@ -77,7 +93,6 @@
                                     <a class="dropdown-item" href="logout">Log Out</a>
                                 </div>
                             </li>
-
                         </ul>
                     </div>
                 </div>
@@ -94,10 +109,13 @@
 
 
             &nbsp;&nbsp;
-
+			<%
+                    	if(userType.equals("User")){
+            %>
             <button class="btn bg-black text-white btnhover" data-toggle="modal" data-target="#CreateDelivery">
                 Set New Delivery Option
             </button>
+            <%} %>
 
             <!-- Modal -->
             <form action="createDelivery" method="post">
@@ -179,6 +197,14 @@
                         <th scope="col">Max Weight</th>
                         <th scope="col">Price/KG</th>
                         <th scope="col">Status</th>
+                        <%
+							if(userType.equals("Admin")){							
+						%>
+							<th scope="col">Shipper</th>
+								
+						<%	
+							}
+                        %>
                         <th scope="col">Sender</th>
                         <th scope="col">Cancel</th>
                     </tr>
@@ -217,6 +243,7 @@
                             </c:choose>
 
                             <c:choose>
+                            
                                 <c:when test="${shipment.getSenderById(shipment.getSenderId()) == null }">
                                     <td>
                                         <button class="btn btn-secondary" disabled>
@@ -232,9 +259,9 @@
                                         </button>
                                     </td>
                                 </c:otherwise>
+                                
+                                
                             </c:choose>
-
-
                             <div class="modal fade" id="Sender${shipment.getSenderId() }" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
@@ -267,6 +294,54 @@
                                     </div>
                                 </div>
                             </div>
+                            <%
+								if(userType.equals("Admin")){							
+							%>
+							<td>
+                                <button class="btn btn-warning" data-toggle="modal"
+                                    data-target="#Shipper${shipment.getUserId()}">
+                                    Shipper Info
+                                </button>
+                                <div class="modal fade" id="Shipper${shipment.getUserId() }" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title text-dark" id="exampleModalLongTitle">${shipment.getShipperName() }</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            
+                                            <div class="height20px"></div>
+                                            <label class = "form-label text-dark">Phone Number</label>
+                                            <input class="form-control  " type="text"
+                                         		placeholder="${shipment.getShipperPhoneNumber() }" disabled>
+                                            <div class="height20px"></div>
+                                            <label class = "form-label text-dark">Email</label>
+                                            <input class="form-control" type="number"
+                                                placeholder="${shipment.getShipperEmail() }" disabled>
+                                            <div class="height20px"></div>
+                                            <label class = "form-label text-dark">Age</label>
+                                            <input class="form-control" type="number"
+                                                placeholder="${shipment.getShipperAge() }" disabled>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-warning"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                
+                            
+                            </td>
+								
+							<%} %>
+
+
+                            
 
 
                             <td>

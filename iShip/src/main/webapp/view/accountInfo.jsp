@@ -28,56 +28,79 @@
 	        +" " + user_lastName;
 	      	java.sql.Date user_regDate = user.getRegistrationDate();
 	      	long user_phoneNumber = user.getPhoneNumber();
-	      	int inProgressOrders = (Integer)session.getAttribute("inProgressOrders"); %>
-	        <nav class="navbar navbar-expand-lg bg-black">
-	            <div class="container-fluid">
-	                <a class="navbar-brand text-yellow ahover" href="myProfile">
-	                    <%=user_firstName %>
-	                </a>
-	                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-	                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-	                    <span class="navbar-toggler-icon"></span>
-	                </button>
-	                <div class="collapse navbar-collapse" id="navbarNav">
-	                    <ul class="nav nav-tabs">
-	
-	
-	
-	                        <li class="nav-item ">
-	                            <a class="text-yellow ahover nav-link dropdown-toggle" href="#" id="navbarDropdown1"
-	                                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	                                My Orders&nbsp;<span class="badge badge-danger">
-	                                    <%=inProgressOrders %>
-	                                </span>
-	                            </a>
-	                            <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
-	
-	                                <a class="dropdown-item" href="myOrders">OngoingOrders</a>
-	                                <div class="dropdown-divider"></div>
-	                                <a class="dropdown-item" href="myCancelledOrders">Cancelled Orders</a>
-	                            </div>
-	                        </li>
-	
-	                        <li class="nav-item ">
-	                            <a class="nav-link text-yellow ahover" href="myDeliveries">My Deliveries</a>
-	                        </li>
-	
-	                        <li class=" nav-item dropdown floatright">
-	                            <a class="text-yellow ahover nav-link dropdown-toggle" href="#" id="navbarDropdown"
-	                                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	                                Settings
-	                            </a>
-	                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-	
-	                                <a class="dropdown-item" href="accountInfo">Account Settings</a>
-	                                <div class="dropdown-divider"></div>
-	                                <a class="dropdown-item" href="logout">Log Out</a>
-	                            </div>
-	                        </li>
-	
-	                    </ul>
-	                </div>
-	        </nav>
+	      	int inProgressOrders = (Integer)session.getAttribute("inProgressOrders");
+	        
+        
+        	String userType = user.getType();
+       	%>
+            <nav class="navbar navbar-expand-lg bg-black">
+                <div class="container-fluid">
+                    <a class="navbar-brand text-yellow ahover" href="myProfile">
+                        <%=user_firstName %>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="nav nav-tabs">
+                        <%
+                        	if(userType.equals("Admin")){
+                        %>
+                        	<li class="nav-item ">
+                                <a class="nav-link text-yellow ahover" href="allOrders">All Orders</a>
+                            </li>
+                            
+                            <li class="nav-item ">
+                                <a class="nav-link text-yellow ahover" href="allShipments">All Shipments</a>
+                            </li>
+                            
+                            <li class="nav-item ">
+                                <a class="nav-link text-yellow ahover" href="allUsers">All Users</a>
+                            </li>
+                        		
+                        <%
+                        	}else{
+                        %>
+                            <li class="nav-item ">
+                                <a class="text-yellow ahover nav-link dropdown-toggle" href="#" id="navbarDropdown1"
+                                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    My Orders&nbsp;<span class="badge badge-danger">
+                                        <%=inProgressOrders %>
+                                    </span>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
+
+                                    <a class="dropdown-item" href="myOrders">Ongoing Orders</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="myCancelledOrders">Cancelled Orders</a>
+                                </div>
+                            </li>
+
+                            <li class="nav-item ">
+                                <a class="nav-link text-yellow ahover" href="myDeliveries">My Deliveries</a>
+                            </li>
+
+                            
+                            <%
+                        		}
+                        	%>
+							<li class=" nav-item dropdown floatright">
+                                <a class="text-yellow ahover nav-link dropdown-toggle" href="#" id="navbarDropdown"
+                                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Settings
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                                    <a class="dropdown-item" href="accountInfo">Account Settings</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="logout">Log Out</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
 	
 	        <div class="container mt-5">
 	            <div class="row">

@@ -21,6 +21,7 @@ import Model.City;
 import Model.Order;
 import Model.Shipment;
 import Model.User;
+import databaseManagement.AdminsDAO;
 import databaseManagement.ApplicationDAO;
 import databaseManagement.CitiesDAO;
 import databaseManagement.OrdersDAO;
@@ -30,11 +31,22 @@ public class OrderService {
 
 	public ModelAndView openUserOrderPage(HttpServletRequest request){
 		OrdersDAO ordersDAO = new OrdersDAO();
+		AdminsDAO adminsDAO = new AdminsDAO();
+		CitiesDAO citiesDAO = new CitiesDAO();
 		ModelAndView mView = new ModelAndView();
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
-		CitiesDAO citiesDAO = new CitiesDAO();
-		List<Order> currentUserOrders = ordersDAO.getOrdersForUser(user.getId());
+		System.out.println(user.getType());
+		if(user.getType().equals("Admin")) {
+			mView.setViewName("myOrders");
+			session.setAttribute("user", user);
+			List<City> allCities = citiesDAO.getAllCities();
+			mView.addObject("allCities", allCities);
+			mView.addObject("currentUserOrders", adminsDAO.getAllOrders());
+			return mView;
+		}
+		
+		List<Order> currentUserOrders = ordersDAO.getOrdersForUser(user.getUserId());
 		session.setAttribute("user", user);
 		request.setAttribute("orders", currentUserOrders);
 		mView.setViewName("myOrders");
@@ -49,7 +61,7 @@ public class OrderService {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		OrdersDAO ordersDAO = new OrdersDAO();
-		List<Order> currentUserCanceledOrders = ordersDAO.getCanceledOrdersForUser(user.getId());
+		List<Order> currentUserCanceledOrders = ordersDAO.getCanceledOrdersForUser(user.getUserId());
 		session.setAttribute("user", user);
 		request.setAttribute("orders", currentUserCanceledOrders);
 		mView.setViewName("myCanceledOrders");
@@ -87,12 +99,12 @@ public class OrderService {
 					weight = Integer.parseInt(request.getParameter("weight"));
 				}
 				if(weight == 0) {
-					 availableShipments =  shipmentsDAO.findShipmentsForOrdersWithoutWeight(depLoc, arrLoc, depDate, arrDate, user.getId());
+					 availableShipments =  shipmentsDAO.findShipmentsForOrdersWithoutWeight(depLoc, arrLoc, depDate, arrDate, user.getUserId());
 				}else {
 					
-					availableShipments =  shipmentsDAO.findShipmentsForOrders(depLoc, arrLoc, depDate, arrDate, weight,user.getId());
+					availableShipments =  shipmentsDAO.findShipmentsForOrders(depLoc, arrLoc, depDate, arrDate, weight,user.getUserId());
 				}
-				List<Shipment> currentUserShipments = shipmentsDAO.getAllShipmentsForUser(user.getId());
+				List<Shipment> currentUserShipments = shipmentsDAO.getAllShipmentsForUser(user.getUserId());
 				request.setAttribute("currentUserShipments", currentUserShipments);
 				request.setAttribute("availableShipments", availableShipments);
 				session.setAttribute("weight",weight);
@@ -124,11 +136,11 @@ public class OrderService {
 			weight = shipment.getMaxWeight();
 		}
 		double price  = weight *1.0*shipment.getPricePerKg();
-		Order order = new Order(user.getId(), shipmentId, weight, "In Progress",price);
+		Order order = new Order(user.getUserId(), shipmentId, weight, "In Progress",price);
 		ordersDAO.createOrder(order);
-		List<Order> currentUserOrders = ordersDAO.getOrdersForUser(user.getId());
+		List<Order> currentUserOrders = ordersDAO.getOrdersForUser(user.getUserId());
 		request.setAttribute("currentUserOrders", currentUserOrders);
-		int inProgressOrders = ordersDAO.getInProgressOrderCountByUserId(user.getId());
+		int inProgressOrders = ordersDAO.getInProgressOrderCountByUserId(user.getUserId());
 		session.setAttribute("inProgressOrders", inProgressOrders);
 		String email = user.getEmail();
 		if(email != null && !email.equals("")) {
@@ -202,9 +214,9 @@ public class OrderService {
 		Shipment shipment  = shipmentsDAO.getShipmentById(order.getShipmentId());
 		shipmentsDAO.setShipmentStatusAvailableById(order.getShipmentId());
 		ordersDAO.cancelOrderSetShipmentNull(cancelId);
-		List<Order> currentUserOrders = ordersDAO.getOrdersForUser(user.getId());
+		List<Order> currentUserOrders = ordersDAO.getOrdersForUser(user.getUserId());
 		request.setAttribute("currentUserOrders", currentUserOrders);
-		int inProgressOrders = ordersDAO.getInProgressOrderCountByUserId(user.getId());
+		int inProgressOrders = ordersDAO.getInProgressOrderCountByUserId(user.getUserId());
 		session.setAttribute("inProgressOrders", inProgressOrders);
 		String email = user.getEmail();
 		if(email != null && !email.equals("")) {

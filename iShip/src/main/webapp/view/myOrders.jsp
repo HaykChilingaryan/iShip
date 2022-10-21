@@ -23,8 +23,11 @@
 
     <body>
         <!--Naviggation Bar -->
-        <% User user=(User)session.getAttribute("user"); String user_firstName=user.getFirstName(); int
-            inProgressOrders=(Integer)session.getAttribute("inProgressOrders"); %>
+        <% 
+        	User user=(User)session.getAttribute("user"); String user_firstName=user.getFirstName();
+        	int inProgressOrders=(Integer)session.getAttribute("inProgressOrders");
+        	String userType = user.getType();
+       	%>
             <nav class="navbar navbar-expand-lg bg-black">
                 <div class="container-fluid">
                     <a class="navbar-brand text-yellow ahover" href="myProfile">
@@ -36,9 +39,24 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="nav nav-tabs">
-
-
-
+                        <%
+                        	if(userType.equals("Admin")){
+                        %>
+                        	<li class="nav-item ">
+                                <a class="nav-link text-yellow ahover" href="allOrders">All Orders</a>
+                            </li>
+                            
+                            <li class="nav-item ">
+                                <a class="nav-link text-yellow ahover" href="allShipments">All Shipments</a>
+                            </li>
+                            
+                            <li class="nav-item ">
+                                <a class="nav-link text-yellow ahover" href="allUsers">All Users</a>
+                            </li>
+                        		
+                        <%
+                        	}else{
+                        %>
                             <li class="nav-item ">
                                 <a class="text-yellow ahover nav-link dropdown-toggle" href="#" id="navbarDropdown1"
                                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -48,7 +66,7 @@
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown1">
 
-                                    <a class="dropdown-item" href="myOrders">OngoingOrders</a>
+                                    <a class="dropdown-item" href="myOrders">Ongoing Orders</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="myCancelledOrders">Cancelled Orders</a>
                                 </div>
@@ -58,7 +76,11 @@
                                 <a class="nav-link text-yellow ahover" href="myDeliveries">My Deliveries</a>
                             </li>
 
-                            <li class=" nav-item dropdown floatright">
+                            
+                            <%
+                        		}
+                        	%>
+							<li class=" nav-item dropdown floatright">
                                 <a class="text-yellow ahover nav-link dropdown-toggle" href="#" id="navbarDropdown"
                                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Settings
@@ -70,7 +92,6 @@
                                     <a class="dropdown-item" href="logout">Log Out</a>
                                 </div>
                             </li>
-
                         </ul>
                     </div>
                 </div>
@@ -82,11 +103,14 @@
 
             </div>
 
-
+			<%
+                 if(userType.equals("User")){
+            %>
             <button class=" ml10 btn bg-black text-white btnhover floatleft" data-toggle="modal" data-target="#NewOrder">
                 Create New Order
             </button>
             &nbsp;
+            <%} %>
 
 
 
@@ -107,7 +131,15 @@
                         <th scope="col">Status</th>
                         <th scope="col">Order Date</th>
                         <th scope="col">Shipper</th>
-                        <th scope="col">Cancel</th>
+                        <%
+								if(userType.equals("Admin")){							
+							%>
+								<th scope="col">Sender</th>
+								
+							<%} %>
+                            	<th scope="col">Cancel</th>
+                        
+                        
 
                     </tr>
                 </thead>
@@ -156,6 +188,17 @@
                                 </button>
                             </td>
 
+							<%
+								if(userType.equals("Admin")){							
+							%>
+							<td>
+                                <button class="btn btn-warning" data-toggle="modal"
+                                    data-target="#sender${order.getSenderId()}">
+                                    Sender Info
+                                </button>
+                            </td>
+								
+							<%} %>
                             <td>
                                 <button class="btn btn-warning" data-toggle="modal"
                                     data-target="#cancelOrder${order.getOrderId() }">
@@ -163,6 +206,7 @@
                                 </button>
 
                             </td>
+                            
 
 
                         </tr>
@@ -214,6 +258,38 @@
                                         <div class="height20px"></div>
                                         <label>Age</label>
                                         <input class="form-control" type="number" placeholder="${order.getShipperAge()}"
+                                            disabled>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!--Sender Modal -->
+                        <div class="modal fade" id="sender${order.getSenderId()}" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">${order.getSenderName()}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <label>Phone Number</label>
+                                        <input class="form-control  " type="text"
+                                            placeholder="${order.getSenderPhoneNumber()}" disabled>
+                                        <div class="height20px"></div>
+                                        <label>Email</label>
+                                        <input class="form-control" type="number" placeholder="${order.getSenderEmail()}"
+                                            disabled>
+                                        <div class="height20px"></div>
+                                        <label>Age</label>
+                                        <input class="form-control" type="number" placeholder="${order.getSenderAge()}"
                                             disabled>
 
                                     </div>

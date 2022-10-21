@@ -34,4 +34,9 @@ public class ShipmentsController {
 	public ModelAndView getShipments(HttpServletRequest request){
 		return SHIPMENT_SERVICE.openUserShipmentsPage(request);
 	}
+	
+	@RequestMapping(value  = {"/allShipments"}, method = RequestMethod.GET)
+	public ModelAndView getAllShipments(HttpServletRequest request){
+		return SHIPMENT_SERVICE.openUserShipmentsPage(request);
+	}
 }

@@ -1,5 +1,10 @@
 package Model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class City {
 
 	private String cityName;
@@ -14,22 +19,6 @@ public class City {
 		this.cityName = cityName;
 		this.countryCode = countryCode;
 	}
-	public String getCityName() {
-		return cityName;
-	}
-	public void setCityName(String cityName) {
-		this.cityName = cityName;
-	}
-	public String getCountryCode() {
-		return countryCode;
-	}
-	public void setCountryCode(String countryCode) {
-		this.countryCode = countryCode;
-	}
 	
-	public City() {
-		
-	}
-	
-	
+	public City() {}
 }

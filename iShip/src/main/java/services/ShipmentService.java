@@ -20,6 +20,7 @@ import Model.City;
 import Model.Order;
 import Model.Shipment;
 import Model.User;
+import databaseManagement.AdminsDAO;
 import databaseManagement.ApplicationDAO;
 import databaseManagement.CitiesDAO;
 import databaseManagement.OrdersDAO;
@@ -93,7 +94,7 @@ public class ShipmentService {
 				throw new RuntimeException(e);
 			}	
 		}
-		List<Shipment> currentUserShipments = shipmentsDAO.getAllShipmentsForUser(user.getId());
+		List<Shipment> currentUserShipments = shipmentsDAO.getAllShipmentsForUser(user.getUserId());
 		request.setAttribute("shipments", currentUserShipments);
 		mView.setViewName("redirect:/myDeliveries");
 		return mView;
@@ -101,11 +102,20 @@ public class ShipmentService {
 	
 	public ModelAndView openUserShipmentsPage(HttpServletRequest request){
 		ModelAndView mView = new ModelAndView();
+		AdminsDAO adminsDAO = new AdminsDAO();
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		ShipmentsDAO shipmentsDAO = new ShipmentsDAO();
 		CitiesDAO citiesDAO = new CitiesDAO();
-		List<Shipment> currentUserShipments = shipmentsDAO.getAllShipmentsForUser(user.getId());
+		if(user.getType().equals("Admin")) {
+			mView.setViewName("myDeliveries");
+			session.setAttribute("user", user);
+			List<City> allCities = citiesDAO.getAllCities();
+			mView.addObject("allCities", allCities);
+			mView.addObject("currentUserShipments", adminsDAO.getAllShipments());
+			return mView;
+		}
+		List<Shipment> currentUserShipments = shipmentsDAO.getAllShipmentsForUser(user.getUserId());
 		request.setAttribute("shipments", currentUserShipments);
 		mView.setViewName("myDeliveries");
 		List<City> allCities = citiesDAO.getAllCities();
@@ -125,7 +135,7 @@ public class ShipmentService {
 		User user = (User) session.getAttribute("user");
 		ShipmentsDAO shipmentsDAO = new ShipmentsDAO();
 		if(depDate.compareTo(arrDate) < 0) {
-			Shipment shipment = new Shipment(user.getId(), depLoc, depDate, arrLoc, arrDate, maxWeight, pricePerKg,0);
+			Shipment shipment = new Shipment(user.getUserId(), depLoc, depDate, arrLoc, arrDate, maxWeight, pricePerKg,0);
 			shipmentsDAO.createShipment(shipment);
 			String email = user.getEmail();
 			if(email != null && !email.equals("")) {
@@ -165,7 +175,7 @@ public class ShipmentService {
 				}	
 			}
 		}
-		List<Shipment> currentUserShipments = shipmentsDAO.getAllShipmentsForUser(user.getId());
+		List<Shipment> currentUserShipments = shipmentsDAO.getAllShipmentsForUser(user.getUserId());
 		
 		request.setAttribute("currentUserShipments", currentUserShipments);
 		

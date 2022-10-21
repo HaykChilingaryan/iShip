@@ -28,8 +28,8 @@ public class ApplicationDAO {
 		int rowsAffected = 0;
 		try {
 			Connection connection = DBConnection.getConnectionToDatabase();
-			String insertQuery = "insert into users(user_firstname,user_lastname,user_age,user_phonenumber,user_email,user_password,user_registrationDate)"
-					+ " values(?,?,?,?,?,?,?)";
+			String insertQuery = "insert into users(user_firstname,user_lastname,user_age,user_phonenumber,user_email,user_password,user_registrationDate,user_type)"
+					+ " values(?,?,?,?,?,?,?,?)";
 			PreparedStatement statement = connection.prepareStatement(insertQuery);
 			statement.setString(1, user.getFirstName());
 			statement.setString(2, user.getLastName());
@@ -38,6 +38,8 @@ public class ApplicationDAO {
 			statement.setString(5, user.getEmail());
 			statement.setString(6, user.getPassword());
 			statement.setDate(7, user.getRegistrationDate());
+			statement.setString(8, user.getType());
+			
 			rowsAffected = statement.executeUpdate();
 
 		} catch (SQLException exception) {
@@ -75,7 +77,7 @@ public class ApplicationDAO {
 			ResultSet set = statement.executeQuery();
 			while (set.next()) {
 				user = new User();
-				user.setId(set.getInt("user_id"));
+				user.setUserId(set.getInt("user_id"));
 				user.setEmail(set.getString("user_email"));
 				user.setFirstName(set.getString("user_firstName"));
 				user.setLastName(set.getString("user_lastName"));
@@ -83,6 +85,7 @@ public class ApplicationDAO {
 				user.setAge(set.getInt("user_age"));
 				user.setPassword(set.getString("user_password"));
 				user.setRegistrationDate(set.getDate("user_registrationDate"));
+				user.setType(set.getString("user_type"));
 			}
 		}
 		catch (SQLException exception) {
@@ -102,7 +105,7 @@ public class ApplicationDAO {
 			ResultSet set = statement.executeQuery();
 			while (set.next()) {
 				user = new User();
-				user.setId(set.getInt("user_id"));
+				user.setUserId(set.getInt("user_id"));
 				user.setEmail(set.getString("user_email"));
 				user.setFirstName(set.getString("user_firstName"));
 				user.setLastName(set.getString("user_lastName"));
@@ -110,6 +113,7 @@ public class ApplicationDAO {
 				user.setAge(set.getInt("user_age"));
 				user.setPassword(set.getString("user_password"));
 				user.setRegistrationDate(set.getDate("user_registrationDate"));
+				user.setType(set.getString("user_type"));
 			}
 		}
 		catch (SQLException exception) {
