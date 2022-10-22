@@ -13,7 +13,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -23,6 +23,8 @@ import databaseManagement.AdminsDAO;
 import databaseManagement.ApplicationDAO;
 import databaseManagement.OrdersDAO;
 
+
+@Service
 public class UserService {
 
 	

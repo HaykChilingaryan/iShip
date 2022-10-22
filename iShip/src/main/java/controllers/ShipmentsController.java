@@ -2,6 +2,7 @@ package controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,6 +14,7 @@ import services.ShipmentService;
 @Controller
 public class ShipmentsController {
 	
+	@Autowired
 	public static final ShipmentService SHIPMENT_SERVICE = new ShipmentService();
 
 	@RequestMapping(value  = {"/deleteShipment"}, method = RequestMethod.POST)

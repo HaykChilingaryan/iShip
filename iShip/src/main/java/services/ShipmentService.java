@@ -13,6 +13,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -26,6 +27,7 @@ import databaseManagement.CitiesDAO;
 import databaseManagement.OrdersDAO;
 import databaseManagement.ShipmentsDAO;
 
+@Service
 public class ShipmentService {
 
 	public ModelAndView deleteShipment(HttpServletRequest request) {
