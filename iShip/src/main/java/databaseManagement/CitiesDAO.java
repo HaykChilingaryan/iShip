@@ -19,9 +19,10 @@ public class CitiesDAO {
 			PreparedStatement statement = connection.prepareStatement(getQueryString);
 			ResultSet results = statement.executeQuery();		
 			while(results.next()) {
-				City city = new City();
-				city.setCityName(results.getString("Name"));
-				city.setCountryCode(results.getString("CountryCode"));
+				City city = City.builder()
+						.cityName(results.getString("Name"))
+						.countryCode(results.getString("CountryCode"))
+						.build();
 				cities.add(city);
 			}					
 		}

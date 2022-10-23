@@ -22,16 +22,17 @@ public class AdminsDAO {
 			java.sql.PreparedStatement statement = connection.prepareStatement(sql);
 			ResultSet set = statement.executeQuery();
 			while (set.next()) {
-				User user = new User();
-				user.setUserId(set.getInt("user_id"));
-				user.setEmail(set.getString("user_email"));
-				user.setFirstName(set.getString("user_firstName"));
-				user.setLastName(set.getString("user_lastName"));
-				user.setPhoneNumber(set.getLong("user_phoneNumber"));
-				user.setAge(set.getInt("user_age"));
-				user.setPassword(set.getString("user_password"));
-				user.setRegistrationDate(set.getDate("user_registrationDate"));
-				user.setType(set.getString("user_type"));
+				User user = User.builder()
+						.age(set.getInt("user_age"))
+						.email(set.getString("user_email"))
+						.firstName(set.getString("user_firstName"))
+						.lastName(set.getString("user_lastName"))
+						.phoneNumber(set.getLong("user_phoneNumber"))
+						.password(set.getString("user_password"))
+						.registrationDate(set.getDate("user_registrationDate"))
+						.type(set.getString("user_type"))
+						.userId(set.getInt("user_id"))
+						.build();
 				users.add(user);
 			}
 		} catch (SQLException exception) {
@@ -48,17 +49,18 @@ public class AdminsDAO {
 			PreparedStatement statement = connection.prepareStatement(searchQueryString);
 			ResultSet results = statement.executeQuery();
 			while(results.next()) {
-				Shipment shipment = new Shipment();
-				shipment.setShipmentId(results.getInt("shipment_id"));
-				shipment.setUserId(results.getInt("shipment_userId"));
-				shipment.setDepartureDate(results.getDate("shipment_departureDate"));
-				shipment.setDepartureLocation(results.getString("shipment_departureLocation"));
-				shipment.setArrivalDate(results.getDate("shipment_arrivalDate"));
-				shipment.setArrivalLocation(results.getString("shipment_arrivalLocation"));
-				shipment.setMaxWeight(results.getInt("shipment_maxWeight"));
-				shipment.setPricePerKg(results.getDouble("shipment_pricePerKg"));
-				shipment.setShipmentRegistrationDate(results.getDate("shipment_registrationDate"));
-				shipment.setSenderId(results.getInt("shipment_senderId"));
+				Shipment shipment = Shipment.builder()
+						.arrivalDate(results.getDate("shipment_arrivalDate"))
+						.arrivalLocation(results.getString("shipment_arrivalLocation"))
+						.departureDate(results.getDate("shipment_departureDate"))
+						.departureLocation(results.getString("shipment_departureLocation"))
+						.shipmentId(results.getInt("shipment_id"))
+						.userId(results.getInt("shipment_userId"))
+						.shipmentRegistrationDate(results.getDate("shipment_registrationDate"))
+						.maxWeight(results.getInt("shipment_maxWeight"))
+						.pricePerKg(results.getDouble("shipment_pricePerKg"))
+						.senderId(results.getInt("shipment_senderId"))
+						.build();
 				shipments.add(shipment);
 			}
 		}catch (SQLException e) {
@@ -76,14 +78,15 @@ public class AdminsDAO {
 			PreparedStatement statement = connection.prepareStatement(getQueryString);
 			ResultSet results = statement.executeQuery();	
 			while(results.next()) {
-				Order order = new Order();
-				order.setOrderId(results.getInt("order_id"));
-				order.setOrderDate(results.getDate("order_registrationDate"));
-				order.setSenderId(results.getInt("order_senderId"));
-				order.setShipmentId(results.getInt("order_shipmentId"));
-				order.setOrderWeight(results.getDouble("order_weight"));
-				order.setOrderPrice(results.getDouble("order_price"));
-				order.setOrderStatus(results.getString("order_status"));
+				Order order = Order.builder()
+						.orderDate(results.getDate("order_registrationDate"))
+						.orderId(results.getInt("order_id"))
+						.senderId(results.getInt("order_senderId"))
+						.shipmentId(results.getInt("order_shipmentId"))
+						.orderWeight(results.getDouble("order_weight"))
+						.orderPrice(results.getDouble("order_price"))
+						.orderStatus(results.getString("order_status"))
+						.build();
 				orders.add(order);
 			}			
 		}

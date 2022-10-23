@@ -5,11 +5,15 @@ import java.util.Date;
 
 import databaseManagement.ApplicationDAO;
 import databaseManagement.ShipmentsDAO;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Order {
 
 	private int orderId;
@@ -29,17 +33,8 @@ public class Order {
 		this.orderPrice = orderPrice;
 		this.orderDate = java.sql.Date.valueOf(LocalDate.now());
 	}
-	public Order() {
-		
-	}
-	public Order(int senderId, double orderWeight, String orderStatus,double orderPrice) {
-		super();
-		this.senderId = senderId;
-		this.shipmentId = 0;
-		this.orderWeight = orderWeight;
-		this.orderStatus = orderStatus;
-		this.orderPrice = orderPrice;
-	}
+
+	
 	
 	
 		

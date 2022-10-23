@@ -27,11 +27,13 @@ import databaseManagement.ApplicationDAO;
 import databaseManagement.CitiesDAO;
 import databaseManagement.OrdersDAO;
 import databaseManagement.ShipmentsDAO;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class OrderService {
 
-	public ModelAndView openUserOrderPage(HttpServletRequest request){
+	public ModelAndView openUserOrderPage(HttpServletRequest request) {
 		OrdersDAO ordersDAO = new OrdersDAO();
 		AdminsDAO adminsDAO = new AdminsDAO();
 		CitiesDAO citiesDAO = new CitiesDAO();
@@ -39,7 +41,7 @@ public class OrderService {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		System.out.println(user.getType());
-		if(user.getType().equals("Admin")) {
+		if (user.getType().equals("Admin")) {
 			mView.setViewName("myOrders");
 			session.setAttribute("user", user);
 			List<City> allCities = citiesDAO.getAllCities();
@@ -47,7 +49,7 @@ public class OrderService {
 			mView.addObject("currentUserOrders", adminsDAO.getAllOrders());
 			return mView;
 		}
-		
+
 		List<Order> currentUserOrders = ordersDAO.getOrdersForUser(user.getUserId());
 		session.setAttribute("user", user);
 		request.setAttribute("orders", currentUserOrders);
@@ -57,8 +59,8 @@ public class OrderService {
 		mView.addObject("currentUserOrders", currentUserOrders);
 		return mView;
 	}
-	
-	public ModelAndView openCanceledOrdersPage(HttpServletRequest request){
+
+	public ModelAndView openCanceledOrdersPage(HttpServletRequest request) {
 		ModelAndView mView = new ModelAndView();
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
@@ -69,24 +71,25 @@ public class OrderService {
 		mView.setViewName("myCanceledOrders");
 		mView.addObject("currentUserCanceledOrders", currentUserCanceledOrders);
 		return mView;
-		
+
 	}
-	public static boolean checkIfValidDate( String date) {
+
+	public static boolean checkIfValidDate(String date) {
 		String[] dateStrings = date.split("-");
-		if(dateStrings.length == 3) {
-			if(Integer.parseInt(dateStrings[1]) > 0 && Integer.parseInt(dateStrings[1]) <= 12) {
-				if(Integer.parseInt(dateStrings[2])> 0 && Integer.parseInt(dateStrings[1])<31) {
+		if (dateStrings.length == 3) {
+			if (Integer.parseInt(dateStrings[1]) > 0 && Integer.parseInt(dateStrings[1]) <= 12) {
+				if (Integer.parseInt(dateStrings[2]) > 0 && Integer.parseInt(dateStrings[1]) < 31) {
 					return true;
 				}
 			}
 		}
 		return false;
-		
+
 	}
+
 	public ModelAndView createOrder(HttpServletRequest request, @RequestParam("departureDate") java.sql.Date depDate,
-			@RequestParam("arrivalDate") java.sql.Date arrDate,
-			@RequestParam("departureLocation") String depLoc,
-			@RequestParam("arrivalLocation") String arrLoc){
+			@RequestParam("arrivalDate") java.sql.Date arrDate, @RequestParam("departureLocation") String depLoc,
+			@RequestParam("arrivalLocation") String arrLoc) {
 		ModelAndView mView = new ModelAndView();
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
@@ -95,38 +98,40 @@ public class OrderService {
 		System.out.println(checkIfValidDate("2022-35-10"));
 		System.out.println(checkIfValidDate(arrDate.toString()));
 		int weight = 0;
-		if(depDate.compareTo(arrDate) < 0) {	
-				mView.addObject("message","Available Options");
-				if(!request.getParameter("weight").equals("")){
-					weight = Integer.parseInt(request.getParameter("weight"));
-				}
-				if(weight == 0) {
-					 availableShipments =  shipmentsDAO.findShipmentsForOrdersWithoutWeight(depLoc, arrLoc, depDate, arrDate, user.getUserId());
-				}else {
-					
-					availableShipments =  shipmentsDAO.findShipmentsForOrders(depLoc, arrLoc, depDate, arrDate, weight,user.getUserId());
-				}
-				List<Shipment> currentUserShipments = shipmentsDAO.getAllShipmentsForUser(user.getUserId());
-				request.setAttribute("currentUserShipments", currentUserShipments);
-				request.setAttribute("availableShipments", availableShipments);
-				session.setAttribute("weight",weight);
-				mView.setViewName("placeOrder");
-				return mView;
-			
+		if (depDate.compareTo(arrDate) < 0) {
+			mView.addObject("message", "Available Options");
+			if (!request.getParameter("weight").equals("")) {
+				weight = Integer.parseInt(request.getParameter("weight"));
+			}
+			if (weight == 0) {
+				availableShipments = shipmentsDAO.findShipmentsForOrdersWithoutWeight(depLoc, arrLoc, depDate, arrDate,
+						user.getUserId());
+			} else {
+
+				availableShipments = shipmentsDAO.findShipmentsForOrders(depLoc, arrLoc, depDate, arrDate, weight,
+						user.getUserId());
+			}
+			List<Shipment> currentUserShipments = shipmentsDAO.getAllShipmentsForUser(user.getUserId());
+			request.setAttribute("currentUserShipments", currentUserShipments);
+			request.setAttribute("availableShipments", availableShipments);
+			session.setAttribute("weight", weight);
+			mView.setViewName("placeOrder");
+			return mView;
+
 		}
-		mView.addObject("message","No Options, Wrong Dates");
+		mView.addObject("message", "No Options, Wrong Dates");
 		mView.setViewName("placeOrder");
 		return mView;
-		
+
 	}
-	
+
 	public ModelAndView openPlaceOrderPage(HttpServletRequest request) {
 		ModelAndView mView = new ModelAndView();
 		mView.setViewName("placeOrder");
 		return mView;
 	}
-	
-	public ModelAndView placeOrder(HttpServletRequest request,@RequestParam("shipmentId") int shipmentId) {
+
+	public ModelAndView placeOrder(HttpServletRequest request, @RequestParam("shipmentId") int shipmentId) {
 		ModelAndView mView = new ModelAndView();
 		OrdersDAO ordersDAO = new OrdersDAO();
 		ShipmentsDAO shipmentsDAO = new ShipmentsDAO();
@@ -134,18 +139,18 @@ public class OrderService {
 		User user = (User) session.getAttribute("user");
 		int weight = (int) session.getAttribute("weight");
 		Shipment shipment = shipmentsDAO.getShipmentById(shipmentId);
-		if(weight == 0) {
+		if (weight == 0) {
 			weight = shipment.getMaxWeight();
 		}
-		double price  = weight *1.0*shipment.getPricePerKg();
-		Order order = new Order(user.getUserId(), shipmentId, weight, "In Progress",price);
+		double price = weight * 1.0 * shipment.getPricePerKg();
+		Order order = new Order(user.getUserId(), shipmentId, weight, "In Progress", price);
 		ordersDAO.createOrder(order);
 		List<Order> currentUserOrders = ordersDAO.getOrdersForUser(user.getUserId());
 		request.setAttribute("currentUserOrders", currentUserOrders);
 		int inProgressOrders = ordersDAO.getInProgressOrderCountByUserId(user.getUserId());
 		session.setAttribute("inProgressOrders", inProgressOrders);
 		String email = user.getEmail();
-		if(email != null && !email.equals("")) {
+		if (email != null && !email.equals("")) {
 			String to = email;
 			Properties props = new Properties();
 			props.put("mail.smtp.host", "smtp.gmail.com");
@@ -160,50 +165,45 @@ public class OrderService {
 				}
 			});
 			try {
-				
+
 				MimeMessage message = new MimeMessage(mailSession);
 				message.setFrom(new InternetAddress(email));
 				message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 				message.setSubject("Order Placement Confirmation");
-				String textString = "Your Order has been successfully Placed\n\n"
-						+ "\nDeparting From: " + shipment.getDepartureLocation() + " on " + shipment.getDepartureDate()
-						+ "\nArriving In: " + shipment.getArrivalLocation() + " on " + shipment.getDepartureDate()
-						+ "\nWeight " + order.getOrderWeight() + "kg"
-						+ "\nPrice: $"+ order.getOrderPrice()
-						+ "\nOrder placed on: " + order.getOrderDate()
-						+ "\n\n\nThank you for your continous trust.";
+				String textString = "Your Order has been successfully Placed\n\n" + "\nDeparting From: "
+						+ shipment.getDepartureLocation() + " on " + shipment.getDepartureDate() + "\nArriving In: "
+						+ shipment.getArrivalLocation() + " on " + shipment.getDepartureDate() + "\nWeight "
+						+ order.getOrderWeight() + "kg" + "\nPrice: $" + order.getOrderPrice() + "\nOrder placed on: "
+						+ order.getOrderDate() + "\n\n\nThank you for your continous trust.";
 				message.setText(textString);
 				// send message
 				System.out.println("sending to sender");
 				Transport.send(message);
 				System.out.println("message sent successfully to sender");
-				
+
 				ApplicationDAO applicationDAO = new ApplicationDAO();
 				User shipperUser = applicationDAO.getUserById(shipment.getUserId());
-				to= shipperUser.getEmail();
+				to = shipperUser.getEmail();
 				message.setFrom(new InternetAddress(email));// change accordingly
 				message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
 				message.setSubject("Shipment Booking Confirmation");
 				String textStringBooking = "Your Shipment has been successfully Booked\n\n"
-						+ "\nShipment Unique Number: " + shipmentId
-						+ "\nDeparting From: " + shipment.getDepartureLocation() + " on " + shipment.getDepartureDate()
-						+ "\nArriving In: " + shipment.getArrivalLocation() + " on " + shipment.getDepartureDate()
-						+ "\nWeight " + order.getOrderWeight() + "kg"
-						+ "\nPrice: $"+ order.getOrderPrice()
-						+ "\nOrder placed on: " + order.getOrderDate()
-						+ "\n\n\nThank you for your continous trust.";
+						+ "\nShipment Unique Number: " + shipmentId + "\nDeparting From: "
+						+ shipment.getDepartureLocation() + " on " + shipment.getDepartureDate() + "\nArriving In: "
+						+ shipment.getArrivalLocation() + " on " + shipment.getDepartureDate() + "\nWeight "
+						+ order.getOrderWeight() + "kg" + "\nPrice: $" + order.getOrderPrice() + "\nOrder placed on: "
+						+ order.getOrderDate() + "\n\n\nThank you for your continous trust.";
 				message.setText(textStringBooking);
-				Transport.send(message);	
+				Transport.send(message);
+			} catch (MessagingException e) {
+				log.error(e.getMessage());
 			}
-			catch (MessagingException e) {
-				throw new RuntimeException(e);
-			}	
 		}
 		mView.setViewName("redirect:/myOrders");
 		return mView;
 	}
-	
-	public ModelAndView cancelOrder(HttpServletRequest request)throws Exception{
+
+	public ModelAndView cancelOrder(HttpServletRequest request) throws Exception {
 		ModelAndView mView = new ModelAndView();
 		OrdersDAO ordersDAO = new OrdersDAO();
 		HttpSession session = request.getSession();
@@ -213,7 +213,7 @@ public class OrderService {
 		int cancelId = Integer.parseInt(request.getParameter("orderId"));
 		System.out.println(cancelId);
 		Order order = ordersDAO.getOrderById(cancelId);
-		Shipment shipment  = shipmentsDAO.getShipmentById(order.getShipmentId());
+		Shipment shipment = shipmentsDAO.getShipmentById(order.getShipmentId());
 		shipmentsDAO.setShipmentStatusAvailableById(order.getShipmentId());
 		ordersDAO.cancelOrderSetShipmentNull(cancelId);
 		List<Order> currentUserOrders = ordersDAO.getOrdersForUser(user.getUserId());
@@ -221,7 +221,7 @@ public class OrderService {
 		int inProgressOrders = ordersDAO.getInProgressOrderCountByUserId(user.getUserId());
 		session.setAttribute("inProgressOrders", inProgressOrders);
 		String email = user.getEmail();
-		if(email != null && !email.equals("")) {
+		if (email != null && !email.equals("")) {
 			String to = email;// change accordingly
 			// Get the session object
 			Properties props = new Properties();
@@ -241,33 +241,29 @@ public class OrderService {
 				message.setFrom(new InternetAddress(email));
 				message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 				message.setSubject("Order Cancellation Confirmation");
-				String textString = "Your Shipment is now available again\n\n"
-						+ "\nDeparting From: " + shipment.getDepartureLocation() + " on " + shipment.getDepartureDate()
-						+ "\nArriving In: " + shipment.getArrivalLocation() + " on " + shipment.getDepartureDate()
-						+ "\nAvailable Space:  " + shipment.getMaxWeight() + "kg"
-						+ "\nPrice Per Kg: $"+ shipment.getPricePerKg()
+				String textString = "Your Shipment is now available again\n\n" + "\nDeparting From: "
+						+ shipment.getDepartureLocation() + " on " + shipment.getDepartureDate() + "\nArriving In: "
+						+ shipment.getArrivalLocation() + " on " + shipment.getDepartureDate() + "\nAvailable Space:  "
+						+ shipment.getMaxWeight() + "kg" + "\nPrice Per Kg: $" + shipment.getPricePerKg()
 						+ "\nShipment placed on: " + shipment.getShipmentRegistrationDate()
 						+ "\n\n\nThank you for your continous trust.";
-				String textStringBooking = "Your Order has been successfully cancelled\n\n"
-						+ "\nDeparting From: " + shipment.getDepartureLocation() + " on " + shipment.getDepartureDate()
-						+ "\nArriving In: " + shipment.getArrivalLocation() + " on " + shipment.getDepartureDate()
-						+ "\nWeight " + order.getOrderWeight() + "kg"
-						+ "\nPrice: $"+ order.getOrderPrice()
-						+ "\nOrder placed on: " + order.getOrderDate()
-						+ "\n\n\nThank you for your continous trust.";
+				String textStringBooking = "Your Order has been successfully cancelled\n\n" + "\nDeparting From: "
+						+ shipment.getDepartureLocation() + " on " + shipment.getDepartureDate() + "\nArriving In: "
+						+ shipment.getArrivalLocation() + " on " + shipment.getDepartureDate() + "\nWeight "
+						+ order.getOrderWeight() + "kg" + "\nPrice: $" + order.getOrderPrice() + "\nOrder placed on: "
+						+ order.getOrderDate() + "\n\n\nThank you for your continous trust.";
 				message.setText(textStringBooking);
 				Transport.send(message);
 				User shipperUser = applicationDAO.getUserById(shipment.getUserId());
-				to= shipperUser.getEmail();
+				to = shipperUser.getEmail();
 				message.setFrom(new InternetAddress(email));// change accordingly
 				message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
 				message.setSubject("Order Cancellation Notice");
 				message.setText(textString);
 				Transport.send(message);
+			} catch (MessagingException e) {
+				log.error(e.getMessage());
 			}
-			catch (MessagingException e) {
-				throw new RuntimeException(e);
-			}	
 		}
 		mView.setViewName("redirect:/myCancelledOrders");
 		return mView;

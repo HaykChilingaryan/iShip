@@ -70,17 +70,19 @@ public class ShipmentsDAO {
 			PreparedStatement statement = connection.prepareStatement(searchQueryString);
 			ResultSet results = statement.executeQuery();
 			while(results.next()) {
-				Shipment shipment = new Shipment();
-				shipment.setShipmentId(results.getInt("shipment_id"));
-				shipment.setUserId(results.getInt("shipment_userId"));
-				shipment.setDepartureDate(results.getDate("shipment_departureDate"));
-				shipment.setDepartureLocation(results.getString("shipment_departureLocation"));
-				shipment.setArrivalDate(results.getDate("shipment_arrivalDate"));
-				shipment.setArrivalLocation(results.getString("shipment_arrivalLocation"));
-				shipment.setMaxWeight(results.getInt("shipment_maxWeight"));
-				shipment.setPricePerKg(results.getDouble("shipment_pricePerKg"));
-				shipment.setShipmentRegistrationDate(results.getDate("shipment_registrationDate"));
-				shipment.setSenderId(results.getInt("shipment_senderId"));
+				Shipment shipment = Shipment.builder()
+						.arrivalDate(results.getDate("shipment_arrivalDate"))
+						.arrivalLocation(results.getString("shipment_arrivalLocation"))
+						.departureDate(results.getDate("shipment_departureDate"))
+						.departureLocation(results.getString("shipment_departureLocation"))
+						.shipmentId(results.getInt("shipment_id"))
+						.userId(results.getInt("shipment_userId"))
+						.shipmentRegistrationDate(results.getDate("shipment_registrationDate"))
+						.maxWeight(results.getInt("shipment_maxWeight"))
+						.pricePerKg(results.getDouble("shipment_pricePerKg"))
+						.senderId(results.getInt("shipment_senderId"))
+						.build();
+				
 				shipments.add(shipment);
 			}
 		}catch (SQLException e) {
@@ -104,17 +106,18 @@ public class ShipmentsDAO {
 			PreparedStatement statement = connection.prepareStatement(searchQueryString);
 			ResultSet results = statement.executeQuery();
 			while(results.next()) {
-				Shipment shipment = new Shipment();
-				shipment.setShipmentId(results.getInt("shipment_id"));
-				shipment.setUserId(results.getInt("shipment_userId"));
-				shipment.setDepartureDate(results.getDate("shipment_departureDate"));
-				shipment.setDepartureLocation(results.getString("shipment_departureLocation"));
-				shipment.setArrivalDate(results.getDate("shipment_arrivalDate"));
-				shipment.setArrivalLocation(results.getString("shipment_arrivalLocation"));
-				shipment.setMaxWeight(results.getInt("shipment_maxWeight"));
-				shipment.setPricePerKg(results.getDouble("shipment_pricePerKg"));
-				shipment.setShipmentRegistrationDate(results.getDate("shipment_registrationDate"));
-				shipment.setSenderId(results.getInt("shipment_senderId"));
+				Shipment shipment = Shipment.builder()
+						.arrivalDate(results.getDate("shipment_arrivalDate"))
+						.arrivalLocation(results.getString("shipment_arrivalLocation"))
+						.departureDate(results.getDate("shipment_departureDate"))
+						.departureLocation(results.getString("shipment_departureLocation"))
+						.shipmentId(results.getInt("shipment_id"))
+						.userId(results.getInt("shipment_userId"))
+						.shipmentRegistrationDate(results.getDate("shipment_registrationDate"))
+						.maxWeight(results.getInt("shipment_maxWeight"))
+						.pricePerKg(results.getDouble("shipment_pricePerKg"))
+						.senderId(results.getInt("shipment_senderId"))
+						.build();
 				shipments.add(shipment);
 			}
 		}catch (SQLException e) {
@@ -175,16 +178,18 @@ public class ShipmentsDAO {
 			PreparedStatement statement = connection.prepareStatement(getQueryString);
 			ResultSet results = statement.executeQuery();
 			while(results.next()) {
-				shipment.setShipmentId(results.getInt("shipment_id"));
-				shipment.setUserId(results.getInt("shipment_userId"));
-				shipment.setDepartureDate(results.getDate("shipment_departureDate"));
-				shipment.setDepartureLocation(results.getString("shipment_departureLocation"));
-				shipment.setArrivalDate(results.getDate("shipment_arrivalDate"));
-				shipment.setArrivalLocation(results.getString("shipment_arrivalLocation"));
-				shipment.setMaxWeight(results.getInt("shipment_maxWeight"));
-				shipment.setPricePerKg(results.getDouble("shipment_pricePerKg"));
-				shipment.setShipmentRegistrationDate(results.getDate("shipment_registrationDate"));
-				shipment.setSenderId(results.getInt("shipment_senderId"));
+				 shipment = Shipment.builder()
+						.arrivalDate(results.getDate("shipment_arrivalDate"))
+						.arrivalLocation(results.getString("shipment_arrivalLocation"))
+						.departureDate(results.getDate("shipment_departureDate"))
+						.departureLocation(results.getString("shipment_departureLocation"))
+						.shipmentId(results.getInt("shipment_id"))
+						.userId(results.getInt("shipment_userId"))
+						.shipmentRegistrationDate(results.getDate("shipment_registrationDate"))
+						.maxWeight(results.getInt("shipment_maxWeight"))
+						.pricePerKg(results.getDouble("shipment_pricePerKg"))
+						.senderId(results.getInt("shipment_senderId"))
+						.build();
 			}			
 		}
 		catch (SQLException e) {
@@ -201,17 +206,18 @@ public class ShipmentsDAO {
 			PreparedStatement statement = connection.prepareStatement(getQueryString);
 			ResultSet results = statement.executeQuery();		
 			while(results.next()) {
-				Shipment shipment = new Shipment();
-				shipment.setShipmentId(results.getInt("shipment_id"));
-				shipment.setUserId(results.getInt("shipment_userId"));
-				shipment.setDepartureDate(results.getDate("shipment_departureDate"));
-				shipment.setDepartureLocation(results.getString("shipment_departureLocation"));
-				shipment.setArrivalDate(results.getDate("shipment_arrivalDate"));
-				shipment.setArrivalLocation(results.getString("shipment_arrivalLocation"));
-				shipment.setMaxWeight(results.getInt("shipment_maxWeight"));
-				shipment.setPricePerKg(results.getDouble("shipment_pricePerKg"));
-				shipment.setShipmentRegistrationDate(results.getDate("shipment_registrationDate"));
-				shipment.setSenderId(results.getInt("shipment_senderId"));
+				Shipment shipment = Shipment.builder()
+						.arrivalDate(results.getDate("shipment_arrivalDate"))
+						.arrivalLocation(results.getString("shipment_arrivalLocation"))
+						.departureDate(results.getDate("shipment_departureDate"))
+						.departureLocation(results.getString("shipment_departureLocation"))
+						.shipmentId(results.getInt("shipment_id"))
+						.userId(results.getInt("shipment_userId"))
+						.shipmentRegistrationDate(results.getDate("shipment_registrationDate"))
+						.maxWeight(results.getInt("shipment_maxWeight"))
+						.pricePerKg(results.getDouble("shipment_pricePerKg"))
+						.senderId(results.getInt("shipment_senderId"))
+						.build();
 				shipments.add(shipment);
 			}					
 		}

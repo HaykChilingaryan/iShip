@@ -13,13 +13,13 @@ public class iShipApplicationInitializer extends AbstractAnnotationConfigDispatc
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
 		@SuppressWarnings("rawtypes")
-		Class[] configClasses = {iShipApplicationConfig.class};
+		Class[] configClasses = { iShipApplicationConfig.class };
 		return configClasses;
 	}
 
 	@Override
 	protected String[] getServletMappings() {
-		String servletMappingStrings[] = {"/"};
+		String servletMappingStrings[] = { "/" };
 		return servletMappingStrings;
 	}
 

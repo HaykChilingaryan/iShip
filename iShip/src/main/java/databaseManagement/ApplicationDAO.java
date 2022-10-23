@@ -14,7 +14,6 @@ public class ApplicationDAO {
 		try {
 			Connection connection = DBConnection.getConnectionToDatabase();
 			String sql = "UPDATE users SET user_password = '" + temporaryPassword +"' WHERE user_id = " +userId;
-			System.out.println(sql);
 			PreparedStatement statement = connection.prepareStatement(sql);
 			rowsAffected = statement.executeUpdate();
 		}
@@ -76,16 +75,17 @@ public class ApplicationDAO {
 			statement.setString(1, email);
 			ResultSet set = statement.executeQuery();
 			while (set.next()) {
-				user = new User();
-				user.setUserId(set.getInt("user_id"));
-				user.setEmail(set.getString("user_email"));
-				user.setFirstName(set.getString("user_firstName"));
-				user.setLastName(set.getString("user_lastName"));
-				user.setPhoneNumber(set.getLong("user_phoneNumber"));
-				user.setAge(set.getInt("user_age"));
-				user.setPassword(set.getString("user_password"));
-				user.setRegistrationDate(set.getDate("user_registrationDate"));
-				user.setType(set.getString("user_type"));
+				user = User.builder()
+						.age(set.getInt("user_age"))
+						.email(set.getString("user_email"))
+						.firstName(set.getString("user_firstName"))
+						.lastName(set.getString("user_lastName"))
+						.phoneNumber(set.getLong("user_phoneNumber"))
+						.password(set.getString("user_password"))
+						.registrationDate(set.getDate("user_registrationDate"))
+						.type(set.getString("user_type"))
+						.userId(set.getInt("user_id"))
+						.build();
 			}
 		}
 		catch (SQLException exception) {
@@ -104,16 +104,17 @@ public class ApplicationDAO {
 			statement.setInt(1, id);
 			ResultSet set = statement.executeQuery();
 			while (set.next()) {
-				user = new User();
-				user.setUserId(set.getInt("user_id"));
-				user.setEmail(set.getString("user_email"));
-				user.setFirstName(set.getString("user_firstName"));
-				user.setLastName(set.getString("user_lastName"));
-				user.setPhoneNumber(set.getLong("user_phoneNumber"));
-				user.setAge(set.getInt("user_age"));
-				user.setPassword(set.getString("user_password"));
-				user.setRegistrationDate(set.getDate("user_registrationDate"));
-				user.setType(set.getString("user_type"));
+				user = User.builder()
+						.age(set.getInt("user_age"))
+						.email(set.getString("user_email"))
+						.firstName(set.getString("user_firstName"))
+						.lastName(set.getString("user_lastName"))
+						.phoneNumber(set.getLong("user_phoneNumber"))
+						.password(set.getString("user_password"))
+						.registrationDate(set.getDate("user_registrationDate"))
+						.type(set.getString("user_type"))
+						.userId(set.getInt("user_id"))
+						.build();
 			}
 		}
 		catch (SQLException exception) {
@@ -138,4 +139,3 @@ public class ApplicationDAO {
 		
 	}
 }
-

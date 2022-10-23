@@ -1,10 +1,14 @@
 package Model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class City {
 
 	private String cityName;
@@ -14,11 +18,5 @@ public class City {
 	public String toString() {
 		return cityName + ", "+ countryCode;
 	}
-	public City(String cityName, String countryCode) {
-		super();
-		this.cityName = cityName;
-		this.countryCode = countryCode;
-	}
 	
-	public City() {}
 }

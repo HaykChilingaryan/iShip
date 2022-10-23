@@ -40,12 +40,10 @@ public class OrdersDAO {
 	}
 	
 	public int deleteOrder(int orderId) {
-		System.out.println("In Delete Order");
 		int rowsAffected =0;
 		try {
 			Connection connection = DBConnection.getConnectionToDatabase();
 			String deleteQueryString = "DELETE FROM orders WHERE order_id = " + orderId;
-			System.out.println(deleteQueryString);
 			PreparedStatement statement = connection.prepareStatement(deleteQueryString);
 			rowsAffected = statement.executeUpdate();
 		}
@@ -57,12 +55,10 @@ public class OrdersDAO {
 	
 	public int cancelOrder(int orderId) {
 		int rowsAffected =0;
-		System.out.println("In cancel order");
 		try {
 			Connection connection = DBConnection.getConnectionToDatabase();
 			String deleteQueryString = "UPDATE orders SET order_status = 'Cancelled' WHERE order_id = " + orderId;						
 			PreparedStatement statement = connection.prepareStatement(deleteQueryString);
-			System.out.println(deleteQueryString);
 			rowsAffected = statement.executeUpdate();
 		}
 		catch (SQLException e) {
@@ -114,13 +110,15 @@ public class OrdersDAO {
 			PreparedStatement statement = connection.prepareStatement(getQueryString);
 			ResultSet results = statement.executeQuery();			
 			while(results.next()) {
-				order.setOrderId(results.getInt("order_id"));
-				order.setOrderDate(results.getDate("order_registrationDate"));
-				order.setSenderId(results.getInt("order_senderId"));
-				order.setShipmentId(results.getInt("order_shipmentId"));
-				order.setOrderWeight(results.getDouble("order_weight"));
-				order.setOrderPrice(results.getDouble("order_price"));
-				order.setOrderStatus(results.getString("order_status"));
+				order = Order.builder()
+				.orderDate(results.getDate("order_registrationDate"))
+				.orderId(results.getInt("order_id"))
+				.senderId(results.getInt("order_senderId"))
+				.shipmentId(results.getInt("order_shipmentId"))
+				.orderWeight(results.getDouble("order_weight"))
+				.orderPrice(results.getDouble("order_price"))
+				.orderStatus(results.getString("order_status"))
+				.build();
 			}					
 		}
 		catch (SQLException e) {
@@ -137,13 +135,15 @@ public class OrdersDAO {
 			PreparedStatement statement = connection.prepareStatement(getQueryString);
 			ResultSet results = statement.executeQuery();			
 			while(results.next()) {
-				order.setOrderId(results.getInt("order_id"));
-				order.setOrderDate(results.getDate("order_registrationDate"));
-				order.setSenderId(results.getInt("order_senderId"));
-				order.setShipmentId(results.getInt("order_shipmentId"));
-				order.setOrderWeight(results.getDouble("order_weight"));
-				order.setOrderPrice(results.getDouble("order_price"));
-				order.setOrderStatus(results.getString("order_status"));
+				order = Order.builder()
+						.orderDate(results.getDate("order_registrationDate"))
+						.orderId(results.getInt("order_id"))
+						.senderId(results.getInt("order_senderId"))
+						.shipmentId(results.getInt("order_shipmentId"))
+						.orderWeight(results.getDouble("order_weight"))
+						.orderPrice(results.getDouble("order_price"))
+						.orderStatus(results.getString("order_status"))
+						.build();
 			}					
 		}
 		catch (SQLException e) {
@@ -160,14 +160,15 @@ public class OrdersDAO {
 			PreparedStatement statement = connection.prepareStatement(getQueryString);
 			ResultSet results = statement.executeQuery();	
 			while(results.next()) {
-				Order order = new Order();
-				order.setOrderId(results.getInt("order_id"));
-				order.setOrderDate(results.getDate("order_registrationDate"));
-				order.setSenderId(results.getInt("order_senderId"));
-				order.setShipmentId(results.getInt("order_shipmentId"));
-				order.setOrderWeight(results.getDouble("order_weight"));
-				order.setOrderPrice(results.getDouble("order_price"));
-				order.setOrderStatus(results.getString("order_status"));
+				Order order = Order.builder()
+						.orderDate(results.getDate("order_registrationDate"))
+						.orderId(results.getInt("order_id"))
+						.senderId(results.getInt("order_senderId"))
+						.shipmentId(results.getInt("order_shipmentId"))
+						.orderWeight(results.getDouble("order_weight"))
+						.orderPrice(results.getDouble("order_price"))
+						.orderStatus(results.getString("order_status"))
+						.build();
 				orders.add(order);
 			}			
 		}
@@ -184,18 +185,18 @@ public class OrdersDAO {
 		try {
 			Connection connection = DBConnection.getConnectionToDatabase();
 			String getQueryString = "SELECT * FROM orders WHERE order_senderId = " + userId + " And order_status = 'Cancelled'";
-			System.out.println(getQueryString);
 			PreparedStatement statement = connection.prepareStatement(getQueryString);
 			ResultSet results = statement.executeQuery();
 			while(results.next()) {
-				Order order = new Order();
-				order.setOrderId(results.getInt("order_id"));
-				order.setOrderDate(results.getDate("order_registrationDate"));
-				order.setSenderId(results.getInt("order_senderId"));
-				order.setOrderWeight(results.getDouble("order_weight"));
-				order.setOrderPrice(results.getDouble("order_price"));
-				order.setOrderStatus(results.getString("order_status"));
-				System.out.println(order);
+				Order order = Order.builder()
+						.orderDate(results.getDate("order_registrationDate"))
+						.orderId(results.getInt("order_id"))
+						.senderId(results.getInt("order_senderId"))
+						.shipmentId(results.getInt("order_shipmentId"))
+						.orderWeight(results.getDouble("order_weight"))
+						.orderPrice(results.getDouble("order_price"))
+						.orderStatus(results.getString("order_status"))
+						.build();
 				canceledOrders.add(order);
 			}			
 		}
@@ -209,9 +210,8 @@ public class OrdersDAO {
 		boolean isValidUser = false;
 		try {
 			Connection connection = DBConnection.getConnectionToDatabase();
-			String sql = "select * from orders where order_id = ?";
+			String sql = "select * from orders where order_id = "+orderId;
 			java.sql.PreparedStatement statement = connection.prepareStatement(sql);
-			statement.setInt(1, orderId);
 			ResultSet set = statement.executeQuery();
 			while (set.next()) {
 				isValidUser = true;

@@ -2,7 +2,6 @@ package controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,12 +13,12 @@ import services.ShipmentService;
 @Controller
 public class ShipmentsController {
 	
-	@Autowired
-	public static final ShipmentService SHIPMENT_SERVICE = new ShipmentService();
+
+	public  final ShipmentService shipmentService = new ShipmentService();
 
 	@RequestMapping(value  = {"/deleteShipment"}, method = RequestMethod.POST)
 	public ModelAndView deleteShipment(HttpServletRequest request) {
-		return SHIPMENT_SERVICE.deleteShipment(request);
+		return shipmentService.deleteShipment(request);
 	}
 	
 	@RequestMapping(value  = {"/createDelivery"}, method = RequestMethod.POST)
@@ -29,16 +28,16 @@ public class ShipmentsController {
 			@RequestParam("arrivalLocation") String arrLoc,
 			@RequestParam("maxWeight") int maxWeight,
 			@RequestParam("pricePerKg") double pricePerKg){
-		return SHIPMENT_SERVICE.createDelivery(request, depDate, arrDate, depLoc, arrLoc, maxWeight, pricePerKg);
+		return shipmentService.createDelivery(request, depDate, arrDate, depLoc, arrLoc, maxWeight, pricePerKg);
 	}
 	
 	@RequestMapping(value  = {"/myDeliveries"}, method = RequestMethod.GET)
 	public ModelAndView getShipments(HttpServletRequest request){
-		return SHIPMENT_SERVICE.openUserShipmentsPage(request);
+		return shipmentService.openUserShipmentsPage(request);
 	}
 	
 	@RequestMapping(value  = {"/allShipments"}, method = RequestMethod.GET)
 	public ModelAndView getAllShipments(HttpServletRequest request){
-		return SHIPMENT_SERVICE.openUserShipmentsPage(request);
+		return shipmentService.openUserShipmentsPage(request);
 	}
 }

@@ -3,11 +3,15 @@ package Model;
 import java.sql.Date;
 import java.time.LocalDate;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 	
 	private int userId;
@@ -32,9 +36,7 @@ public class User {
 		this.registrationDate = Date.valueOf(LocalDate.now());
 		this.type = "User";
 	}
-	public User() {
-		// TODO Auto-generated constructor stub
-	}
+
 	public String getName() {
 		return this.firstName+" "+this.lastName;
 	}
@@ -59,4 +61,3 @@ public class User {
 		return false;
 	}
 }
-
